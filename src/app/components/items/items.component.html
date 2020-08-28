@@ -1,0 +1,115 @@
+<div class="container">
+    <div class="row">
+        <p> </p>
+    </div>
+    <div class="row">
+        <!-- class="row justify-content-md-center  form-group-sm form-control-sm" -->
+        <div class="card">
+            <div class="card-body">
+                <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+                    <div class="form-group ">
+                        <label for="itemname">Item Name</label>
+                        <input class="form-control form-control-sm" placeholder="Enter Item Name"
+                            formControlName="itemname" type="text" 
+                            [ngClass]="{ 'is-invalid': submitted && f.itemname.errors }" >
+                    </div>
+                    <div *ngIf="submitted && f.itemname.errors" class="invalid-feedback">
+                        <div *ngIf="f.itemname.errors.required">Item Name is required</div>
+                    </div>
+
+
+                    <div class="form-group  active-cyan active-cyan-2 ">
+                        <label for="itemcategory">Item Category</label>
+                        <select class="form-control form-control-sm" searchable="Search here.."
+                            formControlName="itemcategory" id="itemcategory" [ngClass]="{ 'is-invalid': submitted && f.itemcategory.errors }">
+                            <option selected>Select Category</option>
+                            <option value="Raw Material">Raw Material</option>
+                            <option value="Machine">Machine</option>
+                            <option value="Labour">Labour</option>
+                            <option value="Fuel">Fuel</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Rent">Rent</option>
+                            <option value="Others">Others</option>
+                        </select>
+
+                        <div *ngIf="submitted && f.itemcategory.errors" class="invalid-feedback">
+                            <div *ngIf="f.itemcategory.errors.required">itemcategory is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemtype">Item Type</label>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <input class="form-control form-control-sm" id="itemtype" #itemtype
+                                formControlName="itemtype" placeholder="Enter Item Type" type="text">
+                            <button class="btn btn-outline-success my-2 my-sm-0 form-control-sm" type="button"
+                                [disabled]="!itemtype.value" (click)="addType(itemtype.value)">+</button>
+                        </div>
+                    </div>
+                    <div *ngIf="itemtypeError">
+                        <p class="text-danger">Type already exists.</p>
+                    </div>
+
+                    <div class="row justify-content-md-center">
+                        <button class="btn btn-sm btn-outline-primary" type="submit"><i class="fa fa-dot-circle-o"></i>
+                            Submit</button>
+                        <button class="btn btn-sm btn-outline-danger" type="reset"><i class="fa fa-ban"></i>
+                            Reset</button>
+                    </div>
+                    <!--<ul class="list-group list-group-horizontal" >-->
+                    <div>
+                        <ul class="list-group">
+                            <li class=" d-flex justify-content-between align-items-center"
+                                *ngFor="let itype of itemTypeList; index as i;">
+                                {{itype}}
+                                <span class="badge badge-danger badge-pill" (click)="removeType(i)">x</span>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div> <!-- End of Item form -->
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="example-header">
+                        <mat-form-field>
+                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                        </mat-form-field>
+                    </div>
+                    <div class="example-container">
+                        <table mat-table [dataSource]="dataSource">
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="itemname">
+                                <th mat-header-cell *matHeaderCellDef> Item Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.itemname}} </td>
+                            </ng-container>
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="itemcategory">
+                                <th mat-header-cell *matHeaderCellDef> Category </th>
+                                <td mat-cell *matCellDef="let element"> {{element.itemcategory}} </td>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="itemtype">
+                                <th mat-header-cell *matHeaderCellDef> Types </th>
+                                <td mat-cell *matCellDef="let element"> {{element.itemtype}} </td>
+                            </ng-container>
+
+                            <!-- Symbol Column -->
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef> Status </th>
+                                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+
+                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
